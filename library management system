@@ -1,0 +1,157 @@
+# START
+# This program simulates a library management system
+# A class named (Library_manager) is embedded with five functions
+# add_member function
+# add_book function
+# book_search function
+# issue_book function
+# return_book function
+
+class Library_manager:
+
+
+    def __init__(self, books ):
+        self.members_database =  {}
+        self.available_books = books
+        self.borrowing_database = {}
+
+                
+    # add_member fuction, facilitates in adding a new member to the database
+    def add_member(request):
+        print("please enter the members name")
+        member_name = input("=>")
+        print("Enter the membership id number")
+        member_id = int(input("=>"))
+        
+        # member id should be unique, this checks the database if the number is registered to someone else.
+        if member_id  in request.members_database.keys():
+            print(" The id entered is already registered to another member")
+
+        # if the id is not registered to someone else, the new member's details are added to the DB.    
+        else:
+            request.members_database.update({member_id:member_name})
+            print( f'{member_name} has been added to the database successfuly')
+
+    # add_book function is used to add new books in the library database
+    def add_book(request):
+        # the generated book id which is unique and the book name are recorded in the DB, to reference the added book.
+        print("Enter the name of the book")
+        book_name = input("=>").lower()    
+        print("Enter the book id")
+        book_id = int(input("=>"))
+        request.available_books.update({book_id:book_name})
+        print (" The book has been added to the database ")
+
+    # book_search function is used to search for a book in the database    
+    def book_search(request):
+        # request the name of the book.
+        print("Enter the name of the book, you would like to search")
+        book = input("=>").lower()
+
+        # loops through the dictionary, to identify if the book exists.
+        if book in request.available_books.values():
+            print( f'{book} is available')
+
+        else:
+            print( f'{book} is not available at the moment')   
+
+    # issue_book function is used when lending a book to a member.
+    def issue_book(request):
+        # the name and the id of the book been issued is requested, this helps to identify the exact book been issued. 
+    
+        print("Enter the book id")
+        book_id =int(input("=>"))
+
+        # the book is checked if its available in the available books DB.
+        if book_id in request.available_books.keys():
+            # member's id is requested to identify who is been issued with the book
+            print("Enter membership id number")
+            members_id = int(input("=>"))
+
+            # checks if the member exists in the database
+            if members_id in request.members_database.keys():
+                # if the member is identified, the borrowing database is recorded.
+                request.borrowing_database.update({book_id:members_id})
+                print("The book issueing has succesfully been recorded.")
+                print(request.borrowing_database)
+            # if the member is not in the database    
+            else:
+                print("members id entered is invalid...")  
+        # if the book is not in the database        
+        else:
+            print("sorry the book, is not in the database.")            
+
+    # book_return function is used when a book is been returned back to the library
+    # its function is to verify the book been returned, then update the borrowing_database.
+    def book_return(request):
+        # request for the member's id
+        print("Enter members_id number")
+        members_id = int(input('=>'))
+        # requests for the book's id
+        print("Enter the book id")
+        book_id =int( input("=>"))
+       
+       # handle error in the case, false data is enterd
+        try:
+            # removes the borrowing details of the book id, from the borrowing database. 
+            # this clears the member on the book they borrowed.
+            del request.borrowing_database[book_id]
+            print('the return is succesful')
+
+        except:
+            print('invalid input, try again')
+            print(request.borrowing_database)
+
+# class function driver
+Library = Library_manager({})
+Library.available_books = {123:"java", 234:"python", 345:"django", 456:"ruby", 567:"flask"}  
+system_running = True
+while system_running is True:
+    print("""     LIBRARY MENU
+    
+    1. To add a Member.
+    2. To add a Book.
+    3. To search a Book.
+    4. To issue a Book.
+    5. To return a Book.
+    6. To Quit Menu.
+    """)  
+    input_choice = input("select a choice => ")
+
+    if input_choice == "1":
+        Library.add_member()
+
+    elif input_choice == "2":
+        Library.add_book()
+
+    elif input_choice == "3":
+        Library.book_search()
+
+    elif input_choice == "4":
+        Library.issue_book()
+
+    elif input_choice == "5":
+        Library.book_return()
+
+    elif input_choice == "6":
+        print(" The system has stopped. ")
+        break
+
+    else:
+        print (""" 
+    The input is not valid !!!
+        Try Again.
+        """)
+# END
+
+# COMPLEXITY ANALYSIS.
+
+# in this program dictionaries have been used to store data,
+# python implements dictionaries using hash tables, where the searches
+# are more faster.
+#
+# Analysis 
+# In this program we observe a constant time complexity of  O(1).
+#
+#
+        
